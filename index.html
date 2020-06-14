@@ -17,17 +17,22 @@
           <label>Search :</label>
           <input type="text" id="search" autocomplete="off">
         </div>
+
+
       </td>
     </tr>
+
     <tr>
       <td id="table-form">
         <form id="addForm">
           Name : <input type="text" name="sname" id="sname">
-          Age : <input type="number" name="sage" id="sage">
+          Age :  <input type="number" name="sage" id="sage">
           City : <input type="text" name="scity" id="scity">
           <input type="submit" id="save-button" value="Save">
         </form>
       </td>
+
+
     </tr>
     <tr>
       <td id="table-data">
@@ -43,10 +48,11 @@
           <tbody id="load-table">
 
           </tbody>
-
         </table>
       </td>
     </tr>
+
+
   </table>
 
   <div id="error-message" class="messages"></div>
@@ -119,7 +125,7 @@ function loadTable(){
 loadTable();
 
 //Show Success or Error message
-function Message(message,status){
+ function Message(message,status){
 if(status==true){
  $("#success-message").html(message).slideDown();
  $("#error-message").slideUp();
@@ -139,33 +145,35 @@ if(status==true){
 
 //Function For Form Data To Json Object
 function JsonData(targetForm){
-  var arr=$(targetForm).serializeArray(); //convert form values into an array
-  //console.log(arr);
-  var obj1={}; //empty object
+  var arr=$(targetForm).serializeArray(); //Now convert All form values into an array
+  //console.log(arr); //name: "sname", value: "prince" 
+
+  var obj1={};      // Create empty object
   
   for(i=0; i<arr.length; i++){
-    //validation check values empty or not
+    //validation: check values empty or not
     if(arr[i].value == ""){
       return false;
     }
-    obj1[arr[i].name] = arr[i].value; //insert values to object
+    obj1[arr[i].name] = arr[i].value;    //insert values to object
+    //console.log(arr[i].name);         //sname,sage,scity=="prince","23","India"
   }
-  //console.log(obj1); //now converted to javascript object
+  
+  //console.log(obj1); //Now We have javascript object
 
   var json_string=JSON.stringify(obj1);
-  //console.log(insertJSON);
+  //console.log(json_string);  //Now convert javascript object to Json Object
   return json_string;
 }
 
 
   //Insert New Record
   $("#save-button").on("click",function(e){
-  e.preventDefault(); //Refresh by default functionality off
-  var jsonobj=JsonData("#addForm");
+  e.preventDefault(); //Refresh submit functionality off
+  var jsonobj=JsonData("#addForm");  //Get Json data Of Form Values 
   //console.log(jsonobj);
   if(jsonobj==false){
-    Message("All Fields Are Required",false); //call function
-
+    Message("All Fields Are Required",false); //Call Message Function
   }else{
     $.ajax({
       url: "http://localhost/php-rest-api/api-insert.php",
@@ -185,48 +193,45 @@ function JsonData(targetForm){
 
 
   //Delete Record
-  $(document).on("click",".delete-btn",function(){
+ $(document).on("click",".delete-btn",function(){
   if(confirm("Do you Really Want to delete This Record ?")){
-    var studentid=$(this).data("id");  
-    var obj={sid: studentid};  
-    var myJSON=JSON.stringify(obj);
-
-    var row=this; //button target like row
+    var studentid=$(this).data("id"); //get id of partiular student 
+    var obj={sid: studentid};  //create javascript object
+    var myJSON=JSON.stringify(obj); //convert javscript object to json obj
+    var row=this; //For closest animation 
 
     $.ajax({
     url: "http://localhost/php-rest-api/api-delete.php",
     type: "POST",
     data: myJSON,
-
     success:function(data){
     Message(data.message,data.status);
-
-    if(data.status==true){
-        //loadTable(); 
+      if(data.status==true){
         $(row).closest("tr").fadeOut(); 
-        }
+         //loadTable(); 
+        } 
       }
-    });
-  }
+     });
+   }
   });
 
 
 
   //Fetch Single Record : Show in Modal Box
-  $(document).on("click",".edit-btn",function(){
-    //console.log("triger testing");
-  $("#modal").show(); //set css display block
-  var studentid=$(this).data("eid"); //Get data attribute value
-  var obj={sid: studentid};  //First convert to javascript obj
-  var myJSON=JSON.stringify(obj); //Then convert to json obj
-  //console.log(myJSON);
+    $(document).on("click",".edit-btn",function(){
+        //console.log("triger testing ");
+        $("#modal").show();                  //set css to display block to model box
+        var studentid=$(this).data("eid");  //Get data attribute value
+        var obj={sid: studentid};           //First convert to javascript obj
+        var myJSON=JSON.stringify(obj);    //Then convert to json obj
+        //console.log(myJSON); 
 
     $.ajax({
     url: "http://localhost/php-rest-api/api-fetch-single.php",
     type: "POST",
     data: myJSON,
     success:function(data){
-    //console.table(data); //index [0]
+    //console.table(data);   //array index [0]
   
     $("#edit-id").val(data[0].id);
     $("#edit-name").val(data[0].student_name);
@@ -240,18 +245,17 @@ function JsonData(targetForm){
   //Hide Modal Box
   $("#close-btn").on("click",function(){
   //console.log("triger testing");
-   $("#modal").hide(); //set css display none
+   $("#modal").hide(); //set css to display none to model box
    });
   
 
   //Update Record
   $("#edit-submit").on("click",function(e){
   e.preventDefault(); //Refresh by default functionality off
-  var jsonobj=JsonData("#edit-form");
+  var jsonobj=JsonData("#edit-form"); //get json data using call function 
   //console.log(jsonobj);
   if(jsonobj==false){
-    Message("All Fields Are Required",false); //call function
-
+    Message("All Fields Are Required",false); //call message function
   }else{
     $.ajax({
       url: "http://localhost/php-rest-api/api-update.php",
@@ -282,7 +286,7 @@ function JsonData(targetForm){
 
     }else{
       $.each(data,function(key,value){
-     
+    
       $("#load-table").append("<tr>"+
         "<td>"+value.id+"</td>"+
         "<td>"+value.student_name+"</td>"+
@@ -291,12 +295,11 @@ function JsonData(targetForm){
         "<td class='center'><button class='edit-btn' data-eid='"+value.id+"'>Edit</button></td>"+
         "<td class='center'><button class='delete-btn' data-id='"+value.id+"'>Delete</button></td>"+
         "</tr>");
-          });
-        }
+         });
+       }
       }
     });
-  });
-
+  }); 
 
 });
 </script>

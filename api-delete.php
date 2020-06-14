@@ -27,7 +27,6 @@ if(mysqli_num_rows($result1) > 0){
 
 	 if(mysqli_query($conn,$sql)){
 	 	echo json_encode(array("message"=> "Student Record Deleted","status"=> TRUE)); 
-
     }else{
 		echo json_encode(array("message"=> "Student Record Can't Deleted","status"=> FALSE));
 	}

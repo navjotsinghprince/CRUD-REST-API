@@ -3,7 +3,7 @@
 
 header("content-type: application/json"); //return json data
 
-header("Access-Control-Allow-Origin: *"); //koi bhi website aur mobile app access kr skti hai
+header("Access-Control-Allow-Origin: *");   //koi bhi website aur mobile app access kr skti hai
 
 include "config.php";
 

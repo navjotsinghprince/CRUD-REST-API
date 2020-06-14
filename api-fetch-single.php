@@ -2,14 +2,15 @@
 //protip==use POST method in postman api
 //json data hi ayega aur json data format me hi return hoga
 
-header("content-type: application/json"); //return json data
+header("content-type: application/json");     //return json data
 
-header("Access-Control-Allow-Origin: *"); //koi bhi website aur mobile app access kr skti hai
+header("Access-Control-Allow-Origin: *");   //koi bhi website aur mobile app access kr skti hai
 
 //{"sid": "1"} suppose manlo is format me data aya hoga
-//json format  me jo data ayega uske liye
-$data=json_decode(file_get_contents("php://input"),TRUE); //true pass kregy toh json encode() associative array return krta hai
-//php ://input ye agr request mobileAPP ya desktopApp ya WebApp se ayi hai jo bhi  raw data ayega usko read krega chae kon se bi format se ho json ho ya xml
+//json format me jo data ayega uske liye
+
+$data=json_decode(file_get_contents("php://input"),TRUE); //true pass kregy toh json decode() associative array return krta hai
+#php://input ===ye agr request mobileAPP ya desktopApp ya WebApp se ayi hai jo bhi raw data ayega usko read krega chae kon se bi format se ho json ho ya xml
 
 $student_id=$data['sid'];
 
